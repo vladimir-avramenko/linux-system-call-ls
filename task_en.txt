@@ -1,0 +1,49 @@
+Contents needed for submissions. 
+lsdir.c
+makefile
+
+assignment is to work with files and related system calls in C.
+ Your filenames, their contents, and code outputs must be exactly as described here. 
+Data file or outputs must not include extra characters or lines. Pay special attention to the beginning and end of a string you print to output.
+Make sure that you print messages to the expected device in each case of standard output (stdout) and standard error (stderr).
+If your code generates an output, it is expected that it goes to a new line at the end 
+(so that your shell prompt starts on the next line after running your program.)
+Directory listing
+One of the most basic and useful packages shipped with all GNU/Linux operating systems is coreutils (https://www.gnu.org/software/coreutils/coreutils.html) 
+that provides system utilities such as ls and rm. 
+At this point of the semester, you know enough to be able to implement similar functionality by using system calls in C.
+That is exactly how coreutils(https://www.gnu.org/software/coreutils/coreutils.html) has been implemented too.
+
+In this task, you will implement a simplified version of the ls program, called lsdir. 
+Your program must list the details of the files in the current directory, producing the same output as the following command:
+
+ls -alU --time-style=long-iso
+Here are more detailed specification of program:
+
+No argument is provided to program (simply ignore them if provided.)
+In order to retrieve and inspect the file information, you need to carefully study the inode's manual.
+You do not need to check for and list symbolic links. We will test your code in a directory that does not include symbolic links.
+Do not sort the entries in the directory alphabetically (hence, we used option -U for ls.)
+For permission string, we will test your code in environment that only drwx- symbols matter. So, you do not need to code for extra permission such as setuid.
+Do not forget the first line of the output (total #). The number is equivalent to the sum of the number of disk blocks used by each file and directory in the list.
+You should use the number of blocks reported in inode structure for each file. However, you may end up with a different total than the total reported by ls. 
+The reason is that the ls implementations typically define block size of 1024 bytes while inode implementations typically consider block size of 512 bytes. 
+Nevertheless, your total must be consistent with the ls implementation. 
+It is fine to simply adjust your total calculation (for example, divide by 2) after testing your implementation on several folders. 
+Your output must be exactly the same format as provided by the above command.
+Pay attention to formatting. The columns are separated by one space characters from each other (excluding the additional spaces in each output line for alignment purpose).
+Every column is either aligned to left (in case of permissions, user/group, and file name) or to right (in case of numbers including hard-link count and size).
+your columns must be properly aligned otherwise not accepted.
+Some of the system calls that may be useful for this task include opendir(), readdir(), stat()/lstat(), getpwuid(), getgrgid(). (opendir(), readdir(), stat()/lstat(), getpwuid(), getgrgid().) 
+ Make sure it pass the full pathname (absolute/relative) as argument to functions such as lstat().
+It should be able to easily produce date-time formatting using function strftime() and localtime() (to convert date to a suitable input format for strftime()).
+ In order to print perfectly aligned columns, you may temporarily store all to-be-printed strings for each column, determine the maximum length of the strings in the aligned columns, and finally pad them accordingly as you print them. Alternatively, you may choose to perform two reads of directory information, one for determining the max length of columns and one for actual printing. However, the latter approach is less desirable as you would double the amount of readings from disk (which is relatively slow).
+
+Submission lsdir.c, other .c/.h files as if required
+
+ Makefile.
+
+For makefile, ensure that when make is entered on the command line, the executable named lsdir is built. This is all that is required.
+
+Submission: makefile
+
